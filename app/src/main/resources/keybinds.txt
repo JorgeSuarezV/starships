@@ -1,0 +1,24 @@
+{
+"KEYBINDS" : [
+{
+"UP" : "UP",
+"LEFT" : "LEFT",
+"RIGHT" : "RIGHT"
+},
+{
+"UP" : "W",
+"LEFT" : "A",
+"RIGHT" : "D"
+},
+{
+"UP" : "I",
+"LEFT" : "J",
+"RIGHT" : "L"
+},
+{
+"UP" : "T",
+"LEFT" : "F",
+"RIGHT" : "H"
+}
+]
+}

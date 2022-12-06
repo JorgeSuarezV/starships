@@ -1,96 +1,231 @@
 package edu.austral.ingsis.starships
 
 import edu.austral.ingsis.starships.ui.*
-import edu.austral.ingsis.starships.ui.ElementColliderType.*
 import javafx.application.Application
 import javafx.application.Application.launch
+import javafx.event.EventHandler
 import javafx.scene.Scene
+import javafx.scene.control.Button
+import javafx.scene.control.Label
 import javafx.scene.input.KeyCode
+import javafx.scene.layout.HBox
+import javafx.scene.layout.StackPane
+import javafx.scene.layout.VBox
 import javafx.stage.Stage
+import starships.adapter.UIAdapter
+import starships.config.Constants.*
+import starships.state.GameState
+
+
+private val imageResolver = CachedImageResolver(DefaultImageResolver())
+private val facade = ElementsViewFacade(imageResolver)
+private val keyTracker = KeyTracker()
+
 
 fun main() {
-    launch(Starships::class.java)
+    launch(MyStarships::class.java)
 }
+class MyStarships() : Application() {
 
-class Starships() : Application() {
-    private val imageResolver = CachedImageResolver(DefaultImageResolver())
-    private val facade = ElementsViewFacade(imageResolver)
-    private val keyTracker = KeyTracker()
+    private var gameScene = Scene(StackPane())
+    private var stateManager = StateManager(GameState())
+    override fun start(primaryStage: Stage) {
+        setWindowSize(primaryStage)
+        cleanFacade()
+        val adapter = UIAdapter()
+        val inserter = EntityInSceneManager(stateManager, facade, adapter)
+        facade.view.id = "facade"
+        gameScene.stylesheets.add(this::class.java.classLoader.getResource("styles.css")?.toString())
+        gameScene = Scene(facade.view)
+        addListeners(inserter, adapter)
 
-    companion object {
-        val STARSHIP_IMAGE_REF = ImageRef("starship", 70.0, 70.0)
+        setStartingScene(primaryStage, adapter)
+
+        startGame(primaryStage)
     }
 
-    override fun start(primaryStage: Stage) {
-        facade.elements["asteroid-1"] =
-            ElementModel("asteroid-1", 0.0, 0.0, 30.0, 40.0, 0.0, Elliptical, null)
-        facade.elements["asteroid-2"] =
-            ElementModel("asteroid-2", 100.0, 100.0, 30.0, 20.0, 90.0, Rectangular, null)
-        facade.elements["asteroid-3"] =
-            ElementModel("asteroid-3", 200.0, 200.0, 20.0, 30.0, 180.0, Elliptical, null)
+    private fun cleanFacade() {
+        facade.showCollider.set(false)
+        facade.showGrid.set(false)
+    }
 
-        val starship = ElementModel("starship", 300.0, 300.0, 40.0, 40.0, 270.0, Triangular, STARSHIP_IMAGE_REF)
-        facade.elements["starship"] = starship
+    private fun setWindowSize(window: Stage) {
+        window.width = GAME_WIDTH + 40
+        window.height = GAME_HEIGHT + 40
+    }
 
-        facade.timeListenable.addEventListener(TimeListener(facade.elements))
-        facade.collisionsListenable.addEventListener(CollisionListener())
-        keyTracker.keyPressedListenable.addEventListener(KeyPressedListener(starship))
+    private fun setStartingScene(primaryStage: Stage, adapter: UIAdapter) {
+        primaryStage.scene = generateStartScene(adapter, primaryStage)
+    }
 
-        val scene = Scene(facade.view)
-        keyTracker.scene = scene
+    private fun generateStartScene(adapter: UIAdapter, window: Stage): Scene {
+        val gameTitleLabel = Label("BloonShip")
+        val onePlayerButton = generatePlayerButton(1, "One Player", adapter, window)
+        val twoPlayersButton = generatePlayerButton(2, "Two Player", adapter, window)
+        val threePlayersButton = generatePlayerButton(3, "Three Player", adapter, window)
+        val fourPlayersButton = generatePlayerButton(4, "Four Player", adapter, window)
 
-        primaryStage.scene = scene
-        primaryStage.height = 800.0
-        primaryStage.width = 800.0
+        val buttonLayout = HBox()
+        buttonLayout.children.addAll(onePlayerButton, twoPlayersButton, threePlayersButton, fourPlayersButton)
 
+        val completeLayout = VBox()
+        completeLayout.children.addAll(gameTitleLabel, buttonLayout)
+
+        return Scene(completeLayout)
+    }
+
+    private fun generatePlayerButton(playerQuantity: Int, text: String, adapter: UIAdapter, window: Stage): Button {
+        val button =  Button(text)
+        button.onAction = EventHandler {
+            stateManager.setState(adapter.initializeGame(playerQuantity))
+            window.scene = gameScene
+        }
+        return button
+    }
+
+
+
+    private fun addListeners(inserter: EntityInSceneManager, adapter: UIAdapter) : Pauser{
+        val timeListener = TimeListener(stateManager, inserter, adapter)
+        val pauseManager = Pauser(timeListener)
+        keyTracker.scene = gameScene
+        facade.timeListenable.addEventListener(timeListener)
+        facade.collisionsListenable.addEventListener(CollisionListener(stateManager, inserter, adapter))
+        facade.outOfBoundsListenable.addEventListener(OutOfBoundsListener(stateManager, inserter, adapter))
+        keyTracker.keyPressedListenable.addEventListener(KeyPressedListener(stateManager, pauseManager, inserter, adapter))
+        keyTracker.keyReleasedListenable.addEventListener(KeyReleasedListener(stateManager, inserter, adapter))
+        return pauseManager
+    }
+
+    private fun startGame(primaryStage: Stage) {
         facade.start()
         keyTracker.start()
         primaryStage.show()
     }
+}
+class EntityInSceneManager(
+    private val stateManager: StateManager,
+    private val facade: ElementsViewFacade,
+    private val adapter: UIAdapter
+){
 
-    override fun stop() {
-        facade.stop()
-        keyTracker.stop()
+    fun updateFacade(newGameState: GameState){
+        val map = newGameState.collideableMap.acualCollideablesMap
+        val oldMap = stateManager.getState().collideableMap.acualCollideablesMap
+        for (key in map.keys){
+            insert(adapter.transformResultToElementModel(map.get(key)))
+        }
+        for (key in oldMap.keys){
+            if (!map.containsKey(key)) removeById(key)
+        }
+    }
+
+    private fun insert(entity: ElementModel){
+        facade.elements[entity.id] = entity
+    }
+
+    fun removeById(entityId: String){
+        facade.elements.remove(entityId)
     }
 }
 
-class TimeListener(private val elements: Map<String, ElementModel>) : EventListener<TimePassed> {
+class StateManager(private var gameState: GameState){
+
+    fun getState() : GameState{
+        return gameState
+    }
+
+    fun setState(newgameState: GameState){
+        gameState = newgameState
+    }
+}
+
+class Pauser(private val timeListener: TimeListener){
+
+    private var isPaused = false
+
+    fun activatedKey(){
+        if (isPaused) unPause()
+        else pause()
+    }
+    private fun pause() {
+        isPaused = true
+        timeListener.activatedPause()
+    }
+    private fun unPause() {
+        isPaused = false
+        timeListener.deactivatePause()
+    }
+}
+
+
+class TimeListener(var stateManager: StateManager, private val inserter: EntityInSceneManager, private val adapter: UIAdapter) : EventListener<TimePassed> {
+
+    private var isPaused = false
+
+    fun activatedPause(){
+        isPaused = true
+    }
+    fun deactivatePause(){
+        isPaused = false
+    }
     override fun handle(event: TimePassed) {
-        elements.forEach {
-            val (key, element) = it
-            when(key) {
-                "starship" -> {}
-                "asteroid-1" -> {
-                    element.x.set(element.x.value + 0.25)
-                    element.y.set(element.y.value + 0.25)
-                }
-                else -> {
-                    element.x.set(element.x.value - 0.25)
-                    element.y.set(element.y.value - 0.25)
-                }
-            }
-
-            element.rotationInDegrees.set(element.rotationInDegrees.value + 1)
-        }
+        if (isPaused) return
+        val gameState = adapter.handle(event, stateManager.getState())
+        inserter.updateFacade(gameState)
+        stateManager.setState(gameState)
     }
 }
 
-class CollisionListener() : EventListener<Collision> {
+class CollisionListener(
+    private var stateManager: StateManager,
+    private val inserter: EntityInSceneManager,
+    private val adapter: UIAdapter
+) : EventListener<Collision> {
     override fun handle(event: Collision) {
-        println("${event.element1Id} ${event.element2Id}")
+        val gameState = adapter.handle(event, stateManager.getState())
+        inserter.updateFacade(gameState)
+        stateManager.setState(gameState)
     }
-
 }
 
-class KeyPressedListener(private val starship: ElementModel): EventListener<KeyPressed> {
-    override fun handle(event: KeyPressed) {
-        when(event.key) {
-            KeyCode.UP -> starship.y.set(starship.y.value - 5 )
-            KeyCode.DOWN -> starship.y.set(starship.y.value + 5 )
-            KeyCode.LEFT -> starship.x.set(starship.x.value - 5 )
-            KeyCode.RIGHT -> starship.x.set(starship.x.value + 5 )
-            else -> {}
-        }
-    }
+class KeyPressedListener(
+    private var stateManager: StateManager,
+    private val pauser: Pauser,
+    private val inserter: EntityInSceneManager,
+    private val adapter: UIAdapter
+) : EventListener<KeyPressed> {
 
+    override fun handle(event: KeyPressed) {
+        if (event.key == KeyCode.valueOf(PAUSE_GAME)) {
+            pauser.activatedKey()
+        }
+        val gameState = adapter.handle(event, stateManager.getState())
+        inserter.updateFacade(gameState)
+        stateManager.setState(gameState)
+    }
+}
+
+class KeyReleasedListener(
+    private var stateManager: StateManager,
+    private val inserter: EntityInSceneManager,
+    private val adapter: UIAdapter
+) : EventListener<KeyReleased> {
+    override fun handle(event: KeyReleased) {
+        val gameState = adapter.handle(event, stateManager.getState())
+        inserter.updateFacade(gameState)
+        stateManager.setState(gameState)
+    }
+}
+
+class OutOfBoundsListener(
+    private var stateManager: StateManager,
+    private val inserter: EntityInSceneManager,
+    private val adapter: UIAdapter
+) : EventListener<OutOfBounds> {
+    override fun handle(event: OutOfBounds) {
+        val gameState = adapter.handle(event, stateManager.getState())
+        inserter.removeById(event.id)
+        stateManager.setState(gameState)
+    }
 }
