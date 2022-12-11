@@ -10,8 +10,6 @@ public class Constants {
     public static final double GAME_HEIGHT = 1000;
 
     //SHIP CONSTANTS
-    public static final double SHIP_WIDTH = 50;
-    public static final double SHIP_HEIGHT = 50;
     public static final int LIVES = 2;
     public static final double STARSHIP_SPEED_INCREMENT = 4d;
     public static final double STARSHIP_ROTATION_DEGREES = 2d;
@@ -19,10 +17,12 @@ public class Constants {
 
     //BULLET CONSTANTS
     public static final double BULLET_SPEED = 400d;
-    public static final int BULLET_HEIGTH = 30;
+    public static final int BULLET_HEIGHT = 30;
     public static final int BULLET_WIDTH = 20;
     public static final double CLASSIC_DAMAGE = 10;
     public static final double DOUBLE_DAMAGE = 10;
+    public static final double CLASSIC_WEAPON_FIRE_RATE = 0.2d;
+    public static final double DOUBLE_WEAPON_FIRE_RATE = 0.2d;
 
 
     //ASTEROID CONSTANTS

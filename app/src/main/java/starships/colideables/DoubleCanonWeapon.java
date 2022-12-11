@@ -9,8 +9,7 @@ import starships.movement.Vector;
 import java.util.Set;
 import java.util.UUID;
 
-import static starships.config.Constants.BULLET_SPEED;
-import static starships.config.Constants.DOUBLE_DAMAGE;
+import static starships.config.Constants.*;
 
 public class DoubleCanonWeapon implements Weapon {
 
@@ -48,7 +47,6 @@ public class DoubleCanonWeapon implements Weapon {
     }
 
     private boolean readyToShoot(Double secondsSinceLastTime) {
-        double fireRate = 0.2d;
-        return secondsSinceLastShot + secondsSinceLastTime >= fireRate;
+        return secondsSinceLastShot + secondsSinceLastTime >= DOUBLE_WEAPON_FIRE_RATE;
     }
 }

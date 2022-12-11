@@ -18,11 +18,15 @@ import java.util.UUID;
 import static starships.Util.GeneralUtils.getRandomValue;
 import static starships.config.Constants.GAME_WIDTH;
 
-public class PowerUpSpawner implements Spawner{
+public class PowerUpSpawner implements Spawner {
 
 
     private final Double spawnRate;
     private final List<PowerUpApplier> powerUpAppliers = generateAppliers();
+
+    public PowerUpSpawner(Double spawnRate) {
+        this.spawnRate = spawnRate;
+    }
 
     private List<PowerUpApplier> generateAppliers() {
         List<PowerUpApplier> powerUpAppliers = new ArrayList<>();
@@ -30,11 +34,6 @@ public class PowerUpSpawner implements Spawner{
         powerUpAppliers.add(new InvulnerabilityPowerUp(5d, 0d));
         return powerUpAppliers;
     }
-
-    public PowerUpSpawner(Double spawnRate) {
-        this.spawnRate = spawnRate;
-    }
-
 
     @Override
     public Set<Collideable> spawn(Double secondsSinceLastTime, Double currentTimeInSeconds) {
@@ -53,7 +52,6 @@ public class PowerUpSpawner implements Spawner{
     }
 
     private PowerUpApplier generateRandomPowerUp() {
-//        return powerUpAppliers.get(0);
         return powerUpAppliers.get((int) (Math.random() * powerUpAppliers.size()));
     }
 

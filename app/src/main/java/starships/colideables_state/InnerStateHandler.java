@@ -15,7 +15,7 @@ public class InnerStateHandler implements Handler<TimePassed> {
 
     @Override
     public GameState handle(TimePassed event, GameState gameState) {
-        InnerStateVisitor innerStateVisitor = new InnerStateVisitor(event.getSecondsSinceLastTime(), gameState.getKeyService());
+        InnerStateVisitor innerStateVisitor = new InnerStateVisitor(event.getSecondsSinceLastTime());
         return updateGame(innerStateVisitor, gameState);
 
     }

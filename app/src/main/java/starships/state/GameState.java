@@ -4,78 +4,33 @@ import javafx.scene.input.KeyCode;
 import starships.collision.Collideable;
 import starships.keys.KeyService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
-public class GameState {
+public interface GameState {
 
-    private final List<Integer> playerScores;
-    private final CollideableMap collideableMap;
-    private final KeyService keyService;
+    CollideableMap getCollideableMap();
 
-    public GameState(List<Integer> playerScores, CollideableMap collideableMap, KeyService keyService) {
-        this.playerScores = playerScores;
-        this.collideableMap = collideableMap;
-        this.keyService = keyService;
-    }
+    KeyService getKeyService();
 
-    public GameState() {
-        this.playerScores = createNewScores();
-        this.collideableMap = new CollideableMap();
-        this.keyService = new KeyService();
-    }
+    GameState addCollideables(Set<Collideable> collideables);
 
-    private List<Integer> createNewScores() {
-        List<Integer> newScores = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            newScores.add(0);
-        }
-        return newScores;
-    }
+    GameState removeCollideables(Set<Collideable> collideablesToRemove);
 
-    public CollideableMap getCollideableMap() {
-        return collideableMap;
-    }
+    GameState removeCollideablesByIds(Set<String> ids);
 
-    public KeyService getKeyService() {
-        return keyService;
-    }
+    GameState keyPressed(KeyCode key);
 
-    public GameState addCollideables(Set<Collideable> collideables) {
-        return new GameState(playerScores, collideableMap.addCollideables(collideables), keyService);
-    }
+    GameState keyReleased(KeyCode key);
 
-    public GameState removeCollideables(Set<Collideable> collideablesToRemove) {
-        return new GameState(playerScores, collideableMap.removeCollideables(collideablesToRemove), keyService);
-    }
+    ScoreService getScores();
 
-    public GameState removeCollideablesByIds(Set<String> ids) {
-        return new GameState(playerScores, collideableMap.removeCollideablesByIds(ids), keyService);
-    }
+    GameState addPoints(Integer points, Integer playerNumber);
 
-    public GameState keyPressed(KeyCode key) {
-        return new GameState(playerScores, collideableMap, keyService.keyPressed(key));
-    }
+    ScoreService calculateNewPlayerScores(Integer points, Integer playerNumber);
 
-    public GameState keyReleased(KeyCode key) {
-        return new GameState(playerScores, collideableMap, keyService.keyReleased(key));
-    }
+    Integer getPlayerScore(Integer playerNumber);
 
-    public List<Integer> getFinalScores() {
-        return playerScores;
-    }
+    Integer getPlayerQuantity();
 
-    public GameState addPoints(Integer points, Integer playerNumber) {
-        if (points != 0) {
-            return new GameState(calculateNewPlayerScores(points, playerNumber), collideableMap, keyService);
-        }
-        return this;
-    }
-
-    private List<Integer> calculateNewPlayerScores(Integer points, Integer playerNumber) {
-        List<Integer> newScores = new ArrayList<>(playerScores);
-        newScores.set(playerNumber - 1, points + playerScores.get(playerNumber - 1));
-        return newScores;
-    }
+    Integer getLives(Integer playerLives);
 }

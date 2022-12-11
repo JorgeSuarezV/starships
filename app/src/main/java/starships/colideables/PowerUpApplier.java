@@ -8,6 +8,7 @@ public interface PowerUpApplier {
     Starship dismount(Starship starship);
 
     boolean isOver(Double secondsSinceLastTime);
+
     @Nullable
     PowerUpApplier addTime(Double secondsSinceLastTime);
 }

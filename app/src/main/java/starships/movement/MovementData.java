@@ -42,10 +42,12 @@ public class MovementData {
     public Double getAngleInDegrees() {
         return rotation.getAngleInDegrees();
     }
-    public Double getRotationInDegrees(){
+
+    public Double getRotationInDegrees() {
         return rotation.getRotationInDegrees();
     }
-    public Rotation getRotation(){
+
+    public Rotation getRotation() {
         return rotation;
     }
 }

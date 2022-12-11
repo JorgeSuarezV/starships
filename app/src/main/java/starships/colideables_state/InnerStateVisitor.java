@@ -2,9 +2,6 @@ package starships.colideables_state;
 
 import starships.colideables.*;
 import starships.collision.Collideable;
-import starships.keys.KeyService;
-import starships.movement.MovementData;
-import starships.movement.MovementVisitor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,11 +13,9 @@ import static starships.Util.Sets.mergeSetWithItem;
 public class InnerStateVisitor implements Visitor<Set<Collideable>> {
 
     private final Double secondsSinceLastTime;
-    private final Visitor<MovementData> movementVisitor;
 
-    public InnerStateVisitor(Double secondsSinceLastTime, KeyService keyService) {
+    public InnerStateVisitor(Double secondsSinceLastTime) {
         this.secondsSinceLastTime = secondsSinceLastTime;
-        this.movementVisitor  = new MovementVisitor(secondsSinceLastTime, keyService);
     }
 
     @Override
@@ -36,11 +31,11 @@ public class InnerStateVisitor implements Visitor<Set<Collideable>> {
                 starship.getId(),
                 starship.getPlayerNumber(),
                 starship.getStarshipPowerUps(),
-                starship.accept(movementVisitor),
+                starship.getMovementData(),
                 starship.getLives(),
                 shot.getWeapon(),
-                starship.getCollisionVisitor()
-        );
+                starship.getCollisionVisitor(),
+                starship.getMover());
     }
 
     private Starship calculatePUNewState(Starship starship) {
@@ -51,8 +46,7 @@ public class InnerStateVisitor implements Visitor<Set<Collideable>> {
         for (int i = start; i < oldPU.size(); i++) {
             if (oldPU.get(i).isOver(secondsSinceLastTime)) {
                 return updatePowerUps(oldPU.get(i).dismount(starship), oldPU, newSet, ++i);
-            }
-            else newSet.add(oldPU.get(i).addTime(secondsSinceLastTime));
+            } else newSet.add(oldPU.get(i).addTime(secondsSinceLastTime));
         }
         return createNewStarship(starship, newSet);
     }
@@ -65,15 +59,15 @@ public class InnerStateVisitor implements Visitor<Set<Collideable>> {
                 starship.getMovementData(),
                 starship.getLives(),
                 starship.getWeapon(),
-                starship.getCollisionVisitor()
-        );
+                starship.getCollisionVisitor(),
+                starship.getMover());
     }
 
     @Override
     public Set<Collideable> visitAsteroid(Asteroid asteroid) {
         return Set.of(new Asteroid(
                 asteroid.getId(),
-                asteroid.accept(movementVisitor),
+                asteroid.getMovementData(),
                 asteroid.getHealth(),
                 asteroid.getPoints(),
                 asteroid.getCollisionVisitor()
@@ -84,7 +78,7 @@ public class InnerStateVisitor implements Visitor<Set<Collideable>> {
     public Set<Collideable> visitBullet(Bullet bullet) {
         return Set.of(new Bullet(
                 bullet.getId(),
-                bullet.accept(movementVisitor),
+                bullet.getMovementData(),
                 bullet.getBulletData(),
                 bullet.getBulletBehavior(),
                 bullet.getCollisionVisitor()
@@ -95,7 +89,7 @@ public class InnerStateVisitor implements Visitor<Set<Collideable>> {
     public Set<Collideable> visitPowerUp(PowerUp powerUp) {
         return Set.of(new PowerUp(
                 powerUp.getId(),
-                powerUp.accept(movementVisitor),
+                powerUp.getMovementData(),
                 powerUp.getPowerUpAplier(),
                 powerUp.getCollisionResultVisitor()
         ));

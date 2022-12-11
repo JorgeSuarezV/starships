@@ -2,7 +2,9 @@ package starships.colideables;
 
 import starships.collision.Collideable;
 import starships.collision.CollisionResult;
+import starships.keys.KeyService;
 import starships.movement.MovementData;
+import starships.movement.Mover;
 
 import java.util.Set;
 import java.util.UUID;
@@ -16,8 +18,9 @@ public class Starship implements Collideable {
     private final Integer lives;
     private final Weapon weapon;
     private final Visitor<CollisionResult> collisionResultVisitor;
+    private final Mover mover;
 
-    public Starship(UUID id, Integer playerNumber, Set<PowerUpApplier> starshipPowerUps, MovementData movementData, Integer lives, Weapon weapon, Visitor<CollisionResult> collisionResultVisitor) {
+    public Starship(UUID id, Integer playerNumber, Set<PowerUpApplier> starshipPowerUps, MovementData movementData, Integer lives, Weapon weapon, Visitor<CollisionResult> collisionResultVisitor, Mover mover) {
         this.id = id;
         this.playerNumber = playerNumber;
         this.starshipPowerUps = starshipPowerUps;
@@ -25,6 +28,7 @@ public class Starship implements Collideable {
         this.lives = lives;
         this.weapon = weapon;
         this.collisionResultVisitor = collisionResultVisitor;
+        this.mover = mover;
     }
 
     public UUID getId() {
@@ -49,6 +53,20 @@ public class Starship implements Collideable {
     }
 
     @Override
+    public Collideable move(Double secondsSinceLastTime, KeyService keyService) {
+        return new Starship(
+                id,
+                playerNumber,
+                starshipPowerUps,
+                mover.move(secondsSinceLastTime, keyService, playerNumber, movementData),
+                lives,
+                weapon,
+                collisionResultVisitor,
+                mover
+        );
+    }
+
+    @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visitStarship(this);
     }
@@ -59,5 +77,9 @@ public class Starship implements Collideable {
 
     public Set<PowerUpApplier> getStarshipPowerUps() {
         return starshipPowerUps;
+    }
+
+    public Mover getMover() {
+        return mover;
     }
 }

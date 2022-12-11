@@ -31,8 +31,8 @@ public class DoubleCanonPowerUp implements PowerUpApplier {
                 starship.getMovementData(),
                 starship.getLives(),
                 new DoubleCanonWeapon(0d),
-                starship.getCollisionVisitor()
-        );
+                starship.getCollisionVisitor(),
+                starship.getMover());
     }
 
     @Override
@@ -44,8 +44,8 @@ public class DoubleCanonPowerUp implements PowerUpApplier {
                 starship.getMovementData(),
                 starship.getLives(),
                 new ClassicWeapon(0d),
-                starship.getCollisionVisitor()
-        );
+                starship.getCollisionVisitor(),
+                starship.getMover());
     }
 
     private Set<PowerUpApplier> removePowerUp(Set<PowerUpApplier> starshipPowerUps) {

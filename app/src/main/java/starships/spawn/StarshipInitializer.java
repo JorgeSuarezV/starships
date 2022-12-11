@@ -6,6 +6,7 @@ import starships.collision.ClassicStarshipCollisionVisitor;
 import starships.collision.Collideable;
 import starships.movement.MovementData;
 import starships.movement.Rotation;
+import starships.movement.StarshipMover;
 import starships.movement.Vector;
 
 import java.util.HashSet;
@@ -52,11 +53,12 @@ public class StarshipInitializer {
                 ),
                 LIVES,
                 new ClassicWeapon(0d),
-                new ClassicStarshipCollisionVisitor(playerNumber));
+                new ClassicStarshipCollisionVisitor(playerNumber),
+                new StarshipMover());
     }
 
     private Double startAngle(Integer playerNumber) {
-        if (playerNumber % 2 == 1) return - STARTING_ANGLE;
+        if (playerNumber % 2 == 1) return -STARTING_ANGLE;
         return STARTING_ANGLE;
     }
 }

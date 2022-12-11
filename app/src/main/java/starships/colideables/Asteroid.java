@@ -2,9 +2,12 @@ package starships.colideables;
 
 import starships.collision.Collideable;
 import starships.collision.CollisionResult;
+import starships.keys.KeyService;
 import starships.movement.MovementData;
 
 import java.util.UUID;
+
+import static starships.movement.MovementService.noAccelerationNewMovement;
 
 public class Asteroid implements Collideable {
 
@@ -41,6 +44,17 @@ public class Asteroid implements Collideable {
     @Override
     public Visitor<CollisionResult> getCollisionVisitor() {
         return collisionResultVisitor;
+    }
+
+    @Override
+    public Asteroid move(Double secondsSinceLastTime, KeyService keyService) {
+        return new Asteroid(
+                id,
+                noAccelerationNewMovement(movementData, secondsSinceLastTime),
+                health,
+                points,
+                collisionResultVisitor
+        );
     }
 
     @Override

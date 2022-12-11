@@ -25,7 +25,8 @@ public class ClassicStarshipCollisionVisitor implements Visitor<CollisionResult>
 
     @Override
     public CollisionResult visitBullet(Bullet bullet) {
-        if (playerNumber.equals(bullet.getBulletData().getPlayerNumber())) return new CollisionResult(Collections.emptySet(), Collections.emptySet(), 0, 0);
+        if (playerNumber.equals(bullet.getBulletData().getPlayerNumber()))
+            return new CollisionResult(Collections.emptySet(), Collections.emptySet(), 0, 0);
         return bullet.getBulletBehavior().crashBullet(bullet);
     }
 

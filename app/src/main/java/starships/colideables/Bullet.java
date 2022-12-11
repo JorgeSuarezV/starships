@@ -3,9 +3,12 @@ package starships.colideables;
 import starships.collision.BulletBehavior;
 import starships.collision.Collideable;
 import starships.collision.CollisionResult;
+import starships.keys.KeyService;
 import starships.movement.MovementData;
 
 import java.util.UUID;
+
+import static starships.movement.MovementService.noAccelerationNewMovement;
 
 public class Bullet implements Collideable {
 
@@ -43,6 +46,17 @@ public class Bullet implements Collideable {
     @Override
     public Visitor<CollisionResult> getCollisionVisitor() {
         return collisionResultVisitor;
+    }
+
+    @Override
+    public Collideable move(Double secondsSinceLastTime, KeyService keyService) {
+        return new Bullet(
+                id,
+                noAccelerationNewMovement(movementData, secondsSinceLastTime),
+                bulletData,
+                bulletBehavior,
+                collisionResultVisitor
+        );
     }
 
     @Override

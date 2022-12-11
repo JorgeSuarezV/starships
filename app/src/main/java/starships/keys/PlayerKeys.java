@@ -10,7 +10,7 @@ public class PlayerKeys {
         KEYBINDS = keybinds;
     }
 
-    public Keys getKey(Integer playerNumber){
+    public Keys getKey(Integer playerNumber) {
         return KEYBINDS.get(playerNumber - 1);
 
     }

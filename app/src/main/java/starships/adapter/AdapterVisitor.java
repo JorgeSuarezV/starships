@@ -23,7 +23,7 @@ public class AdapterVisitor implements Visitor<ElementModel> {
                 starship.getMovementData().getAngleInDegrees(),
                 SHIP_COLLIDER_TYPE,
                 STARSHIP_IMAGE_REF
-                );
+        );
     }
 
     @Override
@@ -32,15 +32,15 @@ public class AdapterVisitor implements Visitor<ElementModel> {
                 toId(asteroid),
                 asteroid.getMovementData().getxPosition(),
                 asteroid.getMovementData().getyPosition(),
-                asteroid.getHealth()/2 + 80d,
-                asteroid.getHealth()/2 + 40d,
+                asteroid.getHealth() / 2 + 80d,
+                asteroid.getHealth() / 2 + 40d,
                 asteroid.getMovementData().getAngleInDegrees(),
                 ASTEROID_COLLIDER_TYPE,
                 calculateImage(asteroid.getHealth())
         );
     }
 
-    private ImageRef calculateImage(Double asteroidHealth){
+    private ImageRef calculateImage(Double asteroidHealth) {
         if (asteroidHealth > 100) return ASTEROID_IMAGE_REF_1;
         if (asteroidHealth > 74) return ASTEROID_IMAGE_REF_2;
         return ASTEROID_IMAGE_REF_3;
@@ -52,7 +52,7 @@ public class AdapterVisitor implements Visitor<ElementModel> {
                 toId(bullet),
                 bullet.getMovementData().getxPosition(),
                 bullet.getMovementData().getyPosition(),
-                BULLET_HEIGTH,
+                BULLET_HEIGHT,
                 BULLET_WIDTH,
                 bullet.getMovementData().getAngleInDegrees(),
                 BULLET_COLLIDER_TYPE,

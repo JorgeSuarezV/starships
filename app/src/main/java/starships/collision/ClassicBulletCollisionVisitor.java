@@ -18,7 +18,8 @@ public class ClassicBulletCollisionVisitor implements Visitor<CollisionResult> {
 
     @Override
     public CollisionResult visitStarship(Starship starship) {
-        if (isFromSameShip(starship, bulletData)) return new CollisionResult(Collections.emptySet(), Collections.emptySet(), 0, 0);
+        if (isFromSameShip(starship, bulletData))
+            return new CollisionResult(Collections.emptySet(), Collections.emptySet(), 0, 0);
         return takeOneLiveFromStarship(starship);
     }
 
@@ -28,7 +29,8 @@ public class ClassicBulletCollisionVisitor implements Visitor<CollisionResult> {
 
     @Override
     public CollisionResult visitAsteroid(Asteroid asteroid) {
-        if (asteroidBreaks(asteroid, bulletData)) return new CollisionResult(Collections.emptySet(), Set.of(asteroid), calculatePointsToAdd(asteroid, bulletData), bulletData.getPlayerNumber());
+        if (asteroidBreaks(asteroid, bulletData))
+            return new CollisionResult(Collections.emptySet(), Set.of(asteroid), calculatePointsToAdd(asteroid, bulletData), bulletData.getPlayerNumber());
         Asteroid newAsteroid = new Asteroid(
                 asteroid.getId(),
                 asteroid.getMovementData(),
@@ -71,8 +73,8 @@ public class ClassicBulletCollisionVisitor implements Visitor<CollisionResult> {
                 starship1.getMovementData(),
                 starship1.getLives() - 1,
                 starship1.getWeapon(),
-                starship1.getCollisionVisitor()
-        );
+                starship1.getCollisionVisitor(),
+                starship.getMover());
     }
 
     private Starship addInvulnerabilityToStarship(Starship starship) {

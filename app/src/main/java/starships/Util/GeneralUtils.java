@@ -14,7 +14,7 @@ public class GeneralUtils {
         return min + (max - min) * new Random().nextDouble();
     }
 
-    public static String toId(Collideable collideable){
+    public static String toId(Collideable collideable) {
         return collideable.accept(idVisitor);
     }
 

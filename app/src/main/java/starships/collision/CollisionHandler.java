@@ -5,13 +5,11 @@ import org.jetbrains.annotations.NotNull;
 import starships.state.CollideableMap;
 import starships.state.GameState;
 
-import java.util.List;
-
-public class CollisionHandler implements Handler<Collision>{
+public class CollisionHandler implements Handler<Collision> {
 
 
     @Override
-    public GameState handle(Collision collision, GameState gameState){
+    public GameState handle(Collision collision, GameState gameState) {
         Collideable collideable1 = gameState.getCollideableMap().getColideable(collision.component1());
         Collideable collideable2 = gameState.getCollideableMap().getColideable(collision.component2());
         if (collideableNotFound(collideable1, collideable2)) return gameState;
@@ -38,10 +36,8 @@ public class CollisionHandler implements Handler<Collision>{
     }
 
     private void gameOver(GameState gameState) {
-        List<Integer> finalScores = gameState.getFinalScores();
-        for (int i = 1; i <= finalScores.size(); i++) {
-            System.out.println("Player " + i + ": " + finalScores.get(i-1));
-        }
+        System.out.println("Player 1: " + gameState.getPlayerScore(1));
+        System.out.println("Player 2: " + gameState.getPlayerScore(1));
         System.exit(0);
     }
 

@@ -19,7 +19,7 @@ public class CollideableMap {
         this.activeCollideables = activeCollideables;
     }
 
-    public CollideableMap addCollideables(Set<Collideable> collideables){
+    public CollideableMap addCollideables(Set<Collideable> collideables) {
         ConcurrentHashMap<String, Collideable> newMap = new ConcurrentHashMap<>(activeCollideables);
         for (Collideable collideable : collideables) {
             newMap.put(toId(collideable), collideable);
@@ -27,7 +27,7 @@ public class CollideableMap {
         return new CollideableMap(newMap);
     }
 
-    public CollideableMap removeCollideables(Set<Collideable> collideables){
+    public CollideableMap removeCollideables(Set<Collideable> collideables) {
         ConcurrentHashMap<String, Collideable> newMap = new ConcurrentHashMap<>(activeCollideables);
         for (Collideable collideable : collideables) {
             newMap.remove(toId(collideable));
@@ -35,7 +35,7 @@ public class CollideableMap {
         return new CollideableMap(newMap);
     }
 
-    public CollideableMap removeCollideablesByIds(Set<String> ids){
+    public CollideableMap removeCollideablesByIds(Set<String> ids) {
         ConcurrentHashMap<String, Collideable> newMap = new ConcurrentHashMap<>(activeCollideables);
         for (String collideable : ids) {
             newMap.remove(collideable);
@@ -43,11 +43,11 @@ public class CollideableMap {
         return new CollideableMap(newMap);
     }
 
-    public Collideable getColideable(String id){
+    public Collideable getColideable(String id) {
         return getAcualCollideablesMap().get(id);
     }
 
-    public Map<String, Collideable> getAcualCollideablesMap(){
+    public Map<String, Collideable> getAcualCollideablesMap() {
         return activeCollideables;
     }
 

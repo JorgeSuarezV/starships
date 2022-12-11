@@ -9,8 +9,7 @@ import starships.movement.Vector;
 import java.util.Set;
 import java.util.UUID;
 
-import static starships.config.Constants.BULLET_SPEED;
-import static starships.config.Constants.CLASSIC_DAMAGE;
+import static starships.config.Constants.*;
 
 public class ClassicWeapon implements Weapon {
 
@@ -31,20 +30,19 @@ public class ClassicWeapon implements Weapon {
         return new ShootResult(
                 new ClassicWeapon(0d),
                 Set.of(new Bullet(
-                    UUID.randomUUID(),
-                    new MovementData(
-                            starship.getMovementData().getPosition(),
-                            new Vector(starship.getMovementData().getAngleInDegrees() - 90d, BULLET_SPEED, 0),
-                            new Rotation(starship.getMovementData().getAngleInDegrees() - 90d, 0d)
-                    ),
-                    bulletData,
-                    new ClassicBulletBehavior(),
-                    new ClassicBulletCollisionVisitor(bulletData)
-        )));
+                        UUID.randomUUID(),
+                        new MovementData(
+                                starship.getMovementData().getPosition(),
+                                new Vector(starship.getMovementData().getAngleInDegrees() - 90d, BULLET_SPEED, 0),
+                                new Rotation(starship.getMovementData().getAngleInDegrees() - 90d, 0d)
+                        ),
+                        bulletData,
+                        new ClassicBulletBehavior(),
+                        new ClassicBulletCollisionVisitor(bulletData)
+                )));
     }
 
     private boolean readyToShoot(Double secondsSinceLastTime) {
-        double fireRate = 0.2d;
-        return secondsSinceLastShot + secondsSinceLastTime >= fireRate;
+        return secondsSinceLastShot + secondsSinceLastTime >= CLASSIC_WEAPON_FIRE_RATE;
     }
 }

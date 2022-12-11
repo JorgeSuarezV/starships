@@ -42,8 +42,8 @@ public class ClassicAsteroidCollisionVisitor implements Visitor<CollisionResult>
                 starship1.getMovementData(),
                 starship1.getLives() - 1,
                 starship1.getWeapon(),
-                starship1.getCollisionVisitor()
-        );
+                starship1.getCollisionVisitor(),
+                starship.getMover());
     }
 
     private Starship addInvulnerabilityToStarship(Starship starship) {

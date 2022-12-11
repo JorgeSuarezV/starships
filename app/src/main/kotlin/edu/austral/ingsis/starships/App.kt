@@ -3,7 +3,7 @@ package edu.austral.ingsis.starships
 import edu.austral.ingsis.starships.ui.*
 import javafx.application.Application
 import javafx.application.Application.launch
-import javafx.event.EventHandler
+import javafx.geometry.Pos
 import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.Label
@@ -11,15 +11,20 @@ import javafx.scene.input.KeyCode
 import javafx.scene.layout.HBox
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
+import javafx.scene.text.Font
 import javafx.stage.Stage
 import starships.adapter.UIAdapter
+import starships.collision.Collideable
 import starships.config.Constants.*
 import starships.state.GameState
+import starships.state.NormalGameState
 
 
 private val imageResolver = CachedImageResolver(DefaultImageResolver())
 private val facade = ElementsViewFacade(imageResolver)
 private val keyTracker = KeyTracker()
+private val stateManager = StateManager(NormalGameState(1))
+
 
 
 fun main() {
@@ -28,45 +33,94 @@ fun main() {
 class MyStarships() : Application() {
 
     private var gameScene = Scene(StackPane())
-    private var stateManager = StateManager(GameState())
+
     override fun start(primaryStage: Stage) {
         setWindowSize(primaryStage)
         cleanFacade()
         val adapter = UIAdapter()
         val inserter = EntityInSceneManager(stateManager, facade, adapter)
-        facade.view.id = "facade"
-        gameScene.stylesheets.add(this::class.java.classLoader.getResource("styles.css")?.toString())
-        gameScene = Scene(facade.view)
-        addListeners(inserter, adapter)
 
-        setStartingScene(primaryStage, adapter)
-
+        setStartingScene(primaryStage, adapter, inserter)
+        val life1 = Label("")
+        val life2 = Label("")
+        val score1 = Label("")
+        val score2 = Label("")
+        customizeLabels(life1, life2, score1,score2)
+        gameScene = Scene(buildGeneralPane(life1, life2, score1, score2))
+        val timeListener = TimeListener(stateManager, inserter, adapter, life1, life2, score1, score2)
+        addListeners(inserter, adapter, timeListener)
         startGame(primaryStage)
     }
+
+    private fun customizeLabels(life1: Label, life2: Label, score1: Label, score2: Label) {
+        life1.font = Font("Arial", 40.0)
+        life2.font = Font("Arial", 40.0)
+        score1.font = Font("Arial", 40.0)
+        score2.font = Font("Arial", 40.0)
+    }
+
+
+    private fun buildGeneralPane(life1: Label, life2: Label, score1: Label, score2: Label): StackPane {
+        val generalPane = StackPane()
+
+        val livesLayout = buildLivesLayout(life1, life2)
+        val scoreLayout = buildScoresLayout(score1, score2)
+
+        addBackground()
+
+        generalPane.children.addAll(facade.view, livesLayout, scoreLayout)
+        return generalPane
+
+    }
+
+    private fun addBackground() {
+        facade.view.id = "facade"
+        facade.view.stylesheets.add(this::class.java.classLoader.getResource("styles.css")?.toString())
+        gameScene = Scene(facade.view)
+    }
+
+
 
     private fun cleanFacade() {
         facade.showCollider.set(false)
         facade.showGrid.set(false)
     }
 
+    private fun buildLivesLayout(life1: Label, life2: Label): VBox {
+        val livesLayout = VBox()
+        livesLayout.alignment = Pos.TOP_LEFT
+        livesLayout.children.addAll(life1, life2)
+        return livesLayout
+    }
+
+    private fun buildScoresLayout(score1: Label, score2: Label): VBox {
+        val scoreLayout = VBox()
+        scoreLayout.alignment = Pos.TOP_RIGHT
+        scoreLayout.children.addAll(score1, score2)
+        return scoreLayout
+    }
+
+
     private fun setWindowSize(window: Stage) {
         window.width = GAME_WIDTH + 40
         window.height = GAME_HEIGHT + 40
     }
 
-    private fun setStartingScene(primaryStage: Stage, adapter: UIAdapter) {
-        primaryStage.scene = generateStartScene(adapter, primaryStage)
+    private fun setStartingScene(
+        primaryStage: Stage,
+        adapter: UIAdapter,
+        inserter: EntityInSceneManager,
+    ) {
+        primaryStage.scene = generateStartScene(adapter, primaryStage, inserter)
     }
 
-    private fun generateStartScene(adapter: UIAdapter, window: Stage): Scene {
+    private fun generateStartScene(adapter: UIAdapter, window: Stage, inserter: EntityInSceneManager): Scene {
         val gameTitleLabel = Label("BloonShip")
-        val onePlayerButton = generatePlayerButton(1, "One Player", adapter, window)
-        val twoPlayersButton = generatePlayerButton(2, "Two Player", adapter, window)
-        val threePlayersButton = generatePlayerButton(3, "Three Player", adapter, window)
-        val fourPlayersButton = generatePlayerButton(4, "Four Player", adapter, window)
+        val onePlayerButton = generatePlayerButton(1, "One Player", adapter, window, inserter)
+        val twoPlayersButton = generatePlayerButton(2, "Two Player", adapter, window, inserter)
 
         val buttonLayout = HBox()
-        buttonLayout.children.addAll(onePlayerButton, twoPlayersButton, threePlayersButton, fourPlayersButton)
+        buttonLayout.children.addAll(onePlayerButton, twoPlayersButton)
 
         val completeLayout = VBox()
         completeLayout.children.addAll(gameTitleLabel, buttonLayout)
@@ -74,20 +128,24 @@ class MyStarships() : Application() {
         return Scene(completeLayout)
     }
 
-    private fun generatePlayerButton(playerQuantity: Int, text: String, adapter: UIAdapter, window: Stage): Button {
+    private fun generatePlayerButton(playerQuantity: Int, text: String, adapter: UIAdapter, window: Stage, inserter: EntityInSceneManager): Button {
         val button =  Button(text)
-        button.onAction = EventHandler {
+        button.setOnMouseClicked {
             stateManager.setState(adapter.initializeGame(playerQuantity))
+            inserter.updateFacade(stateManager.getState())
             window.scene = gameScene
         }
         return button
     }
 
+//    private fun startGameScene(gameInitializer: GameInitializer, primaryStage: Stage, gameStart: GameInitializer.GameStart) {
+//        gameState = gameInitializer.selectGameStart(gameStart)
+//        insertCoreEntitiesIntoUI()
+//        primaryStage.scene = gameScene
+//    }
 
-
-    private fun addListeners(inserter: EntityInSceneManager, adapter: UIAdapter) : Pauser{
-        val timeListener = TimeListener(stateManager, inserter, adapter)
-        val pauseManager = Pauser(timeListener)
+    private fun addListeners(inserter: EntityInSceneManager, adapter: UIAdapter, timeListener: TimeListener) : Pauser{
+        val pauseManager = Pauser(stateManager, adapter)
         keyTracker.scene = gameScene
         facade.timeListenable.addEventListener(timeListener)
         facade.collisionsListenable.addEventListener(CollisionListener(stateManager, inserter, adapter))
@@ -112,11 +170,18 @@ class EntityInSceneManager(
     fun updateFacade(newGameState: GameState){
         val map = newGameState.collideableMap.acualCollideablesMap
         val oldMap = stateManager.getState().collideableMap.acualCollideablesMap
-        for (key in map.keys){
-            insert(adapter.transformResultToElementModel(map.get(key)))
-        }
+        addNewElements(map)
+        takeOutOldElements(oldMap, map)
+    }
+    private fun takeOutOldElements(oldMap: MutableMap<String, Collideable>, map: MutableMap<String, Collideable>) {
         for (key in oldMap.keys){
             if (!map.containsKey(key)) removeById(key)
+        }
+    }
+
+    private fun addNewElements(map: MutableMap<String, Collideable>) {
+        for (key in map.keys){
+            insert(adapter.transformResultToElementModel(map.get(key)))
         }
     }
 
@@ -131,16 +196,16 @@ class EntityInSceneManager(
 
 class StateManager(private var gameState: GameState){
 
-    fun getState() : GameState{
+    fun getState() : GameState {
         return gameState
     }
 
-    fun setState(newgameState: GameState){
-        gameState = newgameState
+    fun setState(gameState: GameState){
+        this.gameState = gameState
     }
 }
 
-class Pauser(private val timeListener: TimeListener){
+class Pauser(private val stateManager: StateManager, private val adapter: UIAdapter){
 
     private var isPaused = false
 
@@ -150,30 +215,45 @@ class Pauser(private val timeListener: TimeListener){
     }
     private fun pause() {
         isPaused = true
-        timeListener.activatedPause()
+        stateManager.setState(adapter.pause(stateManager.getState()))
     }
     private fun unPause() {
         isPaused = false
-        timeListener.deactivatePause()
+        stateManager.setState(adapter.unPause(stateManager.getState()))
     }
 }
 
 
-class TimeListener(var stateManager: StateManager, private val inserter: EntityInSceneManager, private val adapter: UIAdapter) : EventListener<TimePassed> {
+class TimeListener(
+    private val stateManager: StateManager,
+    private val inserter: EntityInSceneManager,
+    private val adapter: UIAdapter,
+    private var life1: Label,
+    private var life2: Label,
+    private var score1: Label,
+    private var score2: Label
+) : EventListener<TimePassed> {
 
-    private var isPaused = false
-
-    fun activatedPause(){
-        isPaused = true
-    }
-    fun deactivatePause(){
-        isPaused = false
-    }
     override fun handle(event: TimePassed) {
-        if (isPaused) return
         val gameState = adapter.handle(event, stateManager.getState())
+        updateLives()
+        updateScore()
         inserter.updateFacade(gameState)
         stateManager.setState(gameState)
+    }
+
+    private fun updateScore() {
+        val newscore1 = adapter.getPlayeScore(1, stateManager.getState())
+        if (newscore1 != -1) score1.text = "player 1: $newscore1"
+        val newscore2 = adapter.getPlayeScore(2, stateManager.getState())
+        if (newscore2 != -1) score2.text = "player 2: $newscore2"
+    }
+
+    private fun updateLives() {
+        val newLife1 = adapter.getPlayerLives(1, stateManager.getState())
+        if (newLife1 != -1) life1.text = "player 1: $newLife1"
+        val newLife2 = adapter.getPlayerLives(2, stateManager.getState())
+        if (newLife2 != -1) life2.text = "player 2: $newLife2"
     }
 }
 
@@ -224,6 +304,7 @@ class OutOfBoundsListener(
     private val adapter: UIAdapter
 ) : EventListener<OutOfBounds> {
     override fun handle(event: OutOfBounds) {
+        if (event.id.startsWith("starship")) return
         val gameState = adapter.handle(event, stateManager.getState())
         inserter.removeById(event.id)
         stateManager.setState(gameState)

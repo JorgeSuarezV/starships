@@ -10,19 +10,19 @@ public class Vector {
     }
 
     // Constructor for a vector with degrees from X axis
-    public Vector(Double degrees, Double module, Integer ignored){
+    public Vector(Double degrees, Double module, Integer ignored) {
         this.x = -Math.sin(Math.toRadians(degrees)) * module;
         this.y = Math.cos(Math.toRadians(degrees)) * module;
     }
 
-    public Vector sum(Vector v){
+    public Vector sum(Vector v) {
         final Double newVectorX = this.x + v.getX();
         final Double newVectorY = this.y + v.getY();
         return new Vector(newVectorX, newVectorY);
     }
 
-    public Vector multiply(Double coefficient){
-        return new Vector(this.x*coefficient, this.y*coefficient);
+    public Vector multiply(Double coefficient) {
+        return new Vector(this.x * coefficient, this.y * coefficient);
     }
 
     public Double getX() {
