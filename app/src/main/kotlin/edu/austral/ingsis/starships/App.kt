@@ -8,9 +8,8 @@ import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.input.KeyCode
-import javafx.scene.layout.HBox
-import javafx.scene.layout.StackPane
-import javafx.scene.layout.VBox
+import javafx.scene.layout.*
+import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.stage.Stage
 import starships.adapter.UIAdapter
@@ -54,9 +53,13 @@ class MyStarships() : Application() {
 
     private fun customizeLabels(life1: Label, life2: Label, score1: Label, score2: Label) {
         life1.font = Font("Arial", 40.0)
+        life1.textFill = Color.WHITE
         life2.font = Font("Arial", 40.0)
+        life2.textFill = Color.WHITE
         score1.font = Font("Arial", 40.0)
+        score1.textFill = Color.WHITE
         score2.font = Font("Arial", 40.0)
+        score2.textFill = Color.WHITE
     }
 
 
