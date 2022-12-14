@@ -10,7 +10,7 @@ public class Constants {
     public static final double GAME_HEIGHT = 700;
     public static final String SAVE_DIR = System.getenv("PROGRAMFILES") + "/starship/saves";
     public static final String SAVE_FILE_DIR = SAVE_DIR + "/save1.json";
-    ;
+
 
     //SHIP CONSTANTS
     public static final int LIVES = 5;
