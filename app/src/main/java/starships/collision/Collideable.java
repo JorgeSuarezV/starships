@@ -12,5 +12,5 @@ public interface Collideable extends Visitable {
 
     Collideable move(Double secondsSinceLastTime, KeyService keyService);
 
-    UUID getId();
+    String getId();
 }

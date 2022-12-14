@@ -30,7 +30,6 @@ public class ClassicWeapon implements Weapon {
         return new ShootResult(
                 new ClassicWeapon(0d),
                 Set.of(new Bullet(
-                        UUID.randomUUID(),
                         new MovementData(
                                 starship.getMovementData().getPosition(),
                                 new Vector(starship.getMovementData().getAngleInDegrees() - 90d, BULLET_SPEED, 0),

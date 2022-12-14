@@ -34,7 +34,6 @@ public class DoubleCanonWeapon implements Weapon {
 
     private Bullet createBullet(Starship starship, BulletData bulletData, Double incline) {
         return new Bullet(
-                UUID.randomUUID(),
                 new MovementData(
                         starship.getMovementData().getPosition(),
                         new Vector(starship.getMovementData().getAngleInDegrees() + incline, BULLET_SPEED, 0),

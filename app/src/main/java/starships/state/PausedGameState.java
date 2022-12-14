@@ -62,12 +62,6 @@ public class PausedGameState implements GameState {
     public GameState addPoints(Integer points, Integer playerNumber) {
         return this;
     }
-
-    @Override
-    public ScoreService calculateNewPlayerScores(Integer points, Integer playerNumber) {
-        return gameState.getScores();
-    }
-
     @Override
     public Integer getPlayerScore(Integer playerNumber) {
         return gameState.getPlayerScore(playerNumber);

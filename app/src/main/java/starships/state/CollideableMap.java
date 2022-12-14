@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static starships.Util.GeneralUtils.toId;
 
 public class CollideableMap {
 
@@ -22,7 +21,7 @@ public class CollideableMap {
     public CollideableMap addCollideables(Set<Collideable> collideables) {
         ConcurrentHashMap<String, Collideable> newMap = new ConcurrentHashMap<>(activeCollideables);
         for (Collideable collideable : collideables) {
-            newMap.put(toId(collideable), collideable);
+            newMap.put(collideable.getId(), collideable);
         }
         return new CollideableMap(newMap);
     }
@@ -30,7 +29,7 @@ public class CollideableMap {
     public CollideableMap removeCollideables(Set<Collideable> collideables) {
         ConcurrentHashMap<String, Collideable> newMap = new ConcurrentHashMap<>(activeCollideables);
         for (Collideable collideable : collideables) {
-            newMap.remove(toId(collideable));
+            newMap.remove(collideable.getId());
         }
         return new CollideableMap(newMap);
     }

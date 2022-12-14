@@ -12,21 +12,28 @@ import static starships.movement.MovementService.noAccelerationNewMovement;
 
 public class Bullet implements Collideable {
 
-    private final UUID id;
+    private final String id;
     private final MovementData movementData;
     private final BulletData bulletData;
     private final BulletBehavior bulletBehavior;
     private final Visitor<CollisionResult> collisionResultVisitor;
 
-    public Bullet(UUID id, MovementData movementData, BulletData bulletData, BulletBehavior bulletBehavior, Visitor<CollisionResult> collisionResultVisitor) {
+    public Bullet(String id, MovementData movementData, BulletData bulletData, BulletBehavior bulletBehavior, Visitor<CollisionResult> collisionResultVisitor) {
         this.id = id;
         this.movementData = movementData;
         this.bulletData = bulletData;
         this.bulletBehavior = bulletBehavior;
         this.collisionResultVisitor = collisionResultVisitor;
     }
+    public Bullet(MovementData movementData, BulletData bulletData, BulletBehavior bulletBehavior, Visitor<CollisionResult> collisionResultVisitor) {
+        this.id = "bullet-" + UUID.randomUUID();
+        this.movementData = movementData;
+        this.bulletData = bulletData;
+        this.bulletBehavior = bulletBehavior;
+        this.collisionResultVisitor = collisionResultVisitor;
+    }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

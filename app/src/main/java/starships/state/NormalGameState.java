@@ -78,7 +78,6 @@ public class NormalGameState implements GameState {
         return this;
     }
 
-    @Override
     public ScoreService calculateNewPlayerScores(Integer points, Integer playerNumber) {
         return playerScores.addPoints(playerNumber, points);
     }

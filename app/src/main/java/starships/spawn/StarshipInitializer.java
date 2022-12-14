@@ -43,7 +43,6 @@ public class StarshipInitializer {
 
     private Starship createStarship(Integer playerNumber) {
         return new Starship(
-                UUID.randomUUID(),
                 playerNumber,
                 Set.of(),
                 new MovementData(

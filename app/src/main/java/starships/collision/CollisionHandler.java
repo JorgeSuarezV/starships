@@ -37,7 +37,7 @@ public class CollisionHandler implements Handler<Collision> {
 
     private void gameOver(GameState gameState) {
         System.out.println("Player 1: " + gameState.getPlayerScore(1));
-        System.out.println("Player 2: " + gameState.getPlayerScore(1));
+        System.out.println("Player 2: " + gameState.getPlayerScore(2));
         System.exit(0);
     }
 

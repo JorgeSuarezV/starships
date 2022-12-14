@@ -6,7 +6,6 @@ import starships.colideables.*;
 import starships.colideables.power_up_apliers.DoubleCanonPowerUp;
 import starships.colideables.power_up_apliers.InvulnerabilityPowerUp;
 
-import static starships.Util.GeneralUtils.toId;
 import static starships.config.Constants.*;
 
 
@@ -15,7 +14,8 @@ public class AdapterVisitor implements Visitor<ElementModel> {
 
     @Override
     public ElementModel visitStarship(Starship starship) {
-        return new ElementModel(toId(starship),
+        return new ElementModel(
+                starship.getId(),
                 starship.getMovementData().getxPosition(),
                 starship.getMovementData().getyPosition(),
                 50d,
@@ -29,7 +29,7 @@ public class AdapterVisitor implements Visitor<ElementModel> {
     @Override
     public ElementModel visitAsteroid(Asteroid asteroid) {
         return new ElementModel(
-                toId(asteroid),
+                asteroid.getId(),
                 asteroid.getMovementData().getxPosition(),
                 asteroid.getMovementData().getyPosition(),
                 asteroid.getHealth() / 2 + 80d,
@@ -49,7 +49,7 @@ public class AdapterVisitor implements Visitor<ElementModel> {
     @Override
     public ElementModel visitBullet(Bullet bullet) {
         return new ElementModel(
-                toId(bullet),
+                bullet.getId(),
                 bullet.getMovementData().getxPosition(),
                 bullet.getMovementData().getyPosition(),
                 BULLET_HEIGHT,
@@ -63,7 +63,7 @@ public class AdapterVisitor implements Visitor<ElementModel> {
     @Override
     public ElementModel visitPowerUp(PowerUp powerUp) {
         return new ElementModel(
-                toId(powerUp),
+                powerUp.getId(),
                 powerUp.getMovementData().getxPosition(),
                 powerUp.getMovementData().getyPosition(),
                 50d,

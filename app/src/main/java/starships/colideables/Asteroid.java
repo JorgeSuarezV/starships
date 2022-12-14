@@ -11,21 +11,28 @@ import static starships.movement.MovementService.noAccelerationNewMovement;
 
 public class Asteroid implements Collideable {
 
-    private final UUID id;
+    private final String id;
     private final MovementData movementData;
     private final Double health;
     private final Integer points;
     private final Visitor<CollisionResult> collisionResultVisitor;
 
-    public Asteroid(UUID id, MovementData movementData, Double health, Integer points, Visitor<CollisionResult> collisionResultVisitor) {
+    public Asteroid(String id, MovementData movementData, Double health, Integer points, Visitor<CollisionResult> collisionResultVisitor) {
         this.id = id;
         this.movementData = movementData;
         this.health = health;
         this.points = points;
         this.collisionResultVisitor = collisionResultVisitor;
     }
+    public Asteroid(MovementData movementData, Double health, Integer points, Visitor<CollisionResult> collisionResultVisitor) {
+        this.id = "asteroid-" + UUID.randomUUID();
+        this.movementData = movementData;
+        this.health = health;
+        this.points = points;
+        this.collisionResultVisitor = collisionResultVisitor;
+    }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

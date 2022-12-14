@@ -11,19 +11,25 @@ import static starships.movement.MovementService.noAccelerationNewMovement;
 
 public class PowerUp implements Collideable {
 
-    private final UUID id;
+    private final String id;
     private final MovementData movementData;
     private final PowerUpApplier powerUpAplier;
     private final Visitor<CollisionResult> collisionResultVisitor;
 
-    public PowerUp(UUID id, MovementData movementData, PowerUpApplier powerUpAplier, Visitor<CollisionResult> collisionResultVisitor) {
+    public PowerUp(String id, MovementData movementData, PowerUpApplier powerUpAplier, Visitor<CollisionResult> collisionResultVisitor) {
         this.id = id;
         this.movementData = movementData;
         this.powerUpAplier = powerUpAplier;
         this.collisionResultVisitor = collisionResultVisitor;
     }
+    public PowerUp(MovementData movementData, PowerUpApplier powerUpAplier, Visitor<CollisionResult> collisionResultVisitor) {
+        this.id = "powerUp-" + UUID.randomUUID();
+        this.movementData = movementData;
+        this.powerUpAplier = powerUpAplier;
+        this.collisionResultVisitor = collisionResultVisitor;
+    }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

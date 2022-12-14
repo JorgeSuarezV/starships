@@ -44,7 +44,6 @@ public class PowerUpSpawner implements Spawner {
     private PowerUp spawnPowerUp() {
         PowerUpApplier powerUpAplier = generateRandomPowerUp();
         return new PowerUp(
-                UUID.randomUUID(),
                 calculateRandomMovementData(),
                 powerUpAplier,
                 new ClassicPowerUpCollisionVisitor(powerUpAplier)

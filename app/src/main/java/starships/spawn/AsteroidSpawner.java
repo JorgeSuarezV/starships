@@ -35,7 +35,6 @@ public class AsteroidSpawner implements Spawner {
     private Asteroid spawnAsteroid() {
         double randomValue = getRandomValue(MIN_ASTEROID_SIZE, MAX_ASTEROID_SIZE);
         return new Asteroid(
-                UUID.randomUUID(),
                 calculateRandomMovementData(),
                 randomValue,
                 (int) randomValue,

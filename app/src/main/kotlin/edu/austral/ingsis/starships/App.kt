@@ -141,12 +141,6 @@ class MyStarships() : Application() {
         return button
     }
 
-//    private fun startGameScene(gameInitializer: GameInitializer, primaryStage: Stage, gameStart: GameInitializer.GameStart) {
-//        gameState = gameInitializer.selectGameStart(gameStart)
-//        insertCoreEntitiesIntoUI()
-//        primaryStage.scene = gameScene
-//    }
-
     private fun addListeners(inserter: EntityInSceneManager, adapter: UIAdapter, timeListener: TimeListener) : Pauser{
         val pauseManager = Pauser(stateManager, adapter)
         keyTracker.scene = gameScene

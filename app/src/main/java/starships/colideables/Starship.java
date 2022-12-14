@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class Starship implements Collideable {
 
-    private final UUID id;
+    private final String id;
     private final Integer playerNumber;
     private final Set<PowerUpApplier> starshipPowerUps;
     private final MovementData movementData;
@@ -20,7 +20,7 @@ public class Starship implements Collideable {
     private final Visitor<CollisionResult> collisionResultVisitor;
     private final Mover mover;
 
-    public Starship(UUID id, Integer playerNumber, Set<PowerUpApplier> starshipPowerUps, MovementData movementData, Integer lives, Weapon weapon, Visitor<CollisionResult> collisionResultVisitor, Mover mover) {
+    public Starship(String id, Integer playerNumber, Set<PowerUpApplier> starshipPowerUps, MovementData movementData, Integer lives, Weapon weapon, Visitor<CollisionResult> collisionResultVisitor, Mover mover) {
         this.id = id;
         this.playerNumber = playerNumber;
         this.starshipPowerUps = starshipPowerUps;
@@ -30,8 +30,18 @@ public class Starship implements Collideable {
         this.collisionResultVisitor = collisionResultVisitor;
         this.mover = mover;
     }
+    public Starship(Integer playerNumber, Set<PowerUpApplier> starshipPowerUps, MovementData movementData, Integer lives, Weapon weapon, Visitor<CollisionResult> collisionResultVisitor, Mover mover) {
+        this.id = "starship-" + UUID.randomUUID();
+        this.playerNumber = playerNumber;
+        this.starshipPowerUps = starshipPowerUps;
+        this.movementData = movementData;
+        this.lives = lives;
+        this.weapon = weapon;
+        this.collisionResultVisitor = collisionResultVisitor;
+        this.mover = mover;
+    }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

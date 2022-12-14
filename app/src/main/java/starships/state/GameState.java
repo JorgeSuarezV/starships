@@ -26,8 +26,6 @@ public interface GameState {
 
     GameState addPoints(Integer points, Integer playerNumber);
 
-    ScoreService calculateNewPlayerScores(Integer points, Integer playerNumber);
-
     Integer getPlayerScore(Integer playerNumber);
 
     Integer getPlayerQuantity();

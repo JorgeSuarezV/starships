@@ -68,9 +68,6 @@ public class UIAdapter {
         return gameState.getPlayerScore(playerNumber);
     }
 
-//    public void saveGame(String s) throws IOException {
-//        FileManager.saveGame(s, collideableMap);
-//    }
 
     public ElementModel transformResultToElementModel(Collideable collideables) {
         return collideables.accept(adapterVisitor);
