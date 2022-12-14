@@ -18,21 +18,44 @@ public class MovementHandler implements Handler<TimePassed> {
 
     @NotNull
     private GameState updateGame(Double secondsSinceLastTime, GameState gameState) {
-        return gameState.addCollideables(calculateUpdates(secondsSinceLastTime, gameState));
+        MoveResult moveResult = calculateUpdates(secondsSinceLastTime, gameState);
+        GameState gameState1 = gameState.addCollideables(moveResult.getUpdates());
+        return gameState1.removeCollideables(moveResult.getRemoves());
     }
 
     @NotNull
-    private Set<Collideable> calculateUpdates(Double secondsSinceLastTime, GameState gameState) {
+    private MoveResult calculateUpdates(Double secondsSinceLastTime, GameState gameState) {
         Map<String, Collideable> acualCollideablesMap = gameState.getCollideableMap().getAcualCollideablesMap();
         return calculateNewCollideable(secondsSinceLastTime, acualCollideablesMap, gameState);
     }
 
     @NotNull
-    private Set<Collideable> calculateNewCollideable(Double secondsSinceLastTime, Map<String, Collideable> acualCollideablesMap, GameState gameState) {
+    private MoveResult calculateNewCollideable(Double secondsSinceLastTime, Map<String, Collideable> acualCollideablesMap, GameState gameState) {
         Set<Collideable> updates = new HashSet<>();
+        Set<Collideable> removes = new HashSet<>();
         for (Collideable collideable : acualCollideablesMap.values()) {
-            updates.add(collideable.move(secondsSinceLastTime, gameState.getKeyService()));
+            Collideable newCollideable = collideable.move(secondsSinceLastTime, gameState.getKeyService());
+            if (newCollideable == null) removes.add(collideable);
+            else updates.add(newCollideable);
         }
+        return new MoveResult(updates, removes);
+    }
+}
+
+class MoveResult {
+    private final Set<Collideable> updates;
+    private final Set<Collideable> removes;
+
+    MoveResult(Set<Collideable> updates, Set<Collideable> removes) {
+        this.updates = updates;
+        this.removes = removes;
+    }
+
+    public Set<Collideable> getRemoves() {
+        return removes;
+    }
+
+    public Set<Collideable> getUpdates() {
         return updates;
     }
 }

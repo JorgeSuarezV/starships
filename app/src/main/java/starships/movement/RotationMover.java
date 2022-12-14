@@ -15,14 +15,14 @@ public class RotationMover implements Mover {
         return new MovementData(
                 movementData.getPosition(),
                 movementData.getSpeed(),
-                calculateRotation(movementData)
+                calculateRotation(movementData, secondsSinceLastTime)
         );
     }
 
 
-    private Rotation calculateRotation(MovementData movementData) {
+    private Rotation calculateRotation(MovementData movementData, Double secondsSinceLastTime) {
         if (isRotatingRigth)
-            return new Rotation(movementData.getAngleInDegrees() + movementData.getRotationInDegrees(), movementData.getRotationInDegrees());
-        return new Rotation(movementData.getAngleInDegrees() - movementData.getRotationInDegrees(), movementData.getRotationInDegrees());
+            return new Rotation(movementData.getAngleInDegrees() + movementData.getRotationInDegrees() * secondsSinceLastTime, movementData.getRotationInDegrees());
+        return new Rotation(movementData.getAngleInDegrees() - movementData.getRotationInDegrees() * secondsSinceLastTime, movementData.getRotationInDegrees());
     }
 }

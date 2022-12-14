@@ -1,5 +1,6 @@
 package starships.colideables;
 
+import org.jetbrains.annotations.Nullable;
 import starships.collision.Collideable;
 import starships.collision.CollisionResult;
 import starships.keys.KeyService;
@@ -7,25 +8,27 @@ import starships.movement.MovementData;
 
 import java.util.UUID;
 
+import static starships.movement.MovementService.isOutOfBounds;
 import static starships.movement.MovementService.noAccelerationNewMovement;
 
 public class PowerUp implements Collideable {
 
     private final String id;
     private final MovementData movementData;
-    private final PowerUpApplier powerUpAplier;
+    private final PowerUpApplier powerUpApplier;
     private final Visitor<CollisionResult> collisionResultVisitor;
 
-    public PowerUp(String id, MovementData movementData, PowerUpApplier powerUpAplier, Visitor<CollisionResult> collisionResultVisitor) {
+    public PowerUp(String id, MovementData movementData, PowerUpApplier powerUpApplier, Visitor<CollisionResult> collisionResultVisitor) {
         this.id = id;
         this.movementData = movementData;
-        this.powerUpAplier = powerUpAplier;
+        this.powerUpApplier = powerUpApplier;
         this.collisionResultVisitor = collisionResultVisitor;
     }
-    public PowerUp(MovementData movementData, PowerUpApplier powerUpAplier, Visitor<CollisionResult> collisionResultVisitor) {
+
+    public PowerUp(MovementData movementData, PowerUpApplier powerUpApplier, Visitor<CollisionResult> collisionResultVisitor) {
         this.id = "powerUp-" + UUID.randomUUID();
         this.movementData = movementData;
-        this.powerUpAplier = powerUpAplier;
+        this.powerUpApplier = powerUpApplier;
         this.collisionResultVisitor = collisionResultVisitor;
     }
 
@@ -48,11 +51,14 @@ public class PowerUp implements Collideable {
     }
 
     @Override
-    public Collideable move(Double secondsSinceLastTime, KeyService keyService) {
+    public @Nullable
+    Collideable move(Double secondsSinceLastTime, KeyService keyService) {
+        MovementData movementData = noAccelerationNewMovement(this.movementData, secondsSinceLastTime);
+        if (isOutOfBounds(movementData)) return null;
         return new PowerUp(
                 id,
-                noAccelerationNewMovement(movementData, secondsSinceLastTime),
-                powerUpAplier,
+                movementData,
+                powerUpApplier,
                 collisionResultVisitor
         );
     }
@@ -62,7 +68,7 @@ public class PowerUp implements Collideable {
         return visitor.visitPowerUp(this);
     }
 
-    public PowerUpApplier getPowerUpAplier() {
-        return powerUpAplier;
+    public PowerUpApplier getPowerUpApplier() {
+        return powerUpApplier;
     }
 }

@@ -1,5 +1,6 @@
 package starships.colideables;
 
+import org.jetbrains.annotations.Nullable;
 import starships.collision.Collideable;
 import starships.collision.CollisionResult;
 import starships.keys.KeyService;
@@ -7,6 +8,7 @@ import starships.movement.MovementData;
 
 import java.util.UUID;
 
+import static starships.movement.MovementService.isOutOfBounds;
 import static starships.movement.MovementService.noAccelerationNewMovement;
 
 public class Asteroid implements Collideable {
@@ -24,6 +26,7 @@ public class Asteroid implements Collideable {
         this.points = points;
         this.collisionResultVisitor = collisionResultVisitor;
     }
+
     public Asteroid(MovementData movementData, Double health, Integer points, Visitor<CollisionResult> collisionResultVisitor) {
         this.id = "asteroid-" + UUID.randomUUID();
         this.movementData = movementData;
@@ -54,10 +57,13 @@ public class Asteroid implements Collideable {
     }
 
     @Override
-    public Asteroid move(Double secondsSinceLastTime, KeyService keyService) {
+    public @Nullable
+    Collideable move(Double secondsSinceLastTime, KeyService keyService) {
+        MovementData movementData = noAccelerationNewMovement(this.movementData, secondsSinceLastTime);
+        if (isOutOfBounds(movementData)) return null;
         return new Asteroid(
                 id,
-                noAccelerationNewMovement(movementData, secondsSinceLastTime),
+                movementData,
                 health,
                 points,
                 collisionResultVisitor

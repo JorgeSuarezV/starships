@@ -75,8 +75,8 @@ public class AdapterVisitor implements Visitor<ElementModel> {
     }
 
     private ImageRef grabImageRef(PowerUp powerUp) {
-        if (powerUp.getPowerUpAplier().getClass() == DoubleCanonPowerUp.class) return DOUBLE_CANON_IMAGE_RED;
-        if (powerUp.getPowerUpAplier().getClass() == InvulnerabilityPowerUp.class) return INVULNERABILITY_IMAGE_RED;
+        if (powerUp.getPowerUpApplier().getClass() == DoubleCanonPowerUp.class) return DOUBLE_CANON_IMAGE_RED;
+        if (powerUp.getPowerUpApplier().getClass() == InvulnerabilityPowerUp.class) return INVULNERABILITY_IMAGE_RED;
         else return null;
     }
 }

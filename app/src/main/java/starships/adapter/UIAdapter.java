@@ -7,6 +7,8 @@ import starships.collision.Collideable;
 import starships.collision.CollisionHandler;
 import starships.collision.Handler;
 import starships.movement.MovementHandler;
+import starships.save.LoadHandler;
+import starships.save.SaveHandler;
 import starships.spawn.SpawnHandler;
 import starships.spawn.StarshipInitializer;
 import starships.state.GameState;
@@ -15,15 +17,20 @@ import starships.state.PausedGameState;
 
 import java.util.Set;
 
+import static starships.config.Constants.GAME_HEIGHT;
+import static starships.config.Constants.GAME_WIDTH;
+
 
 public class UIAdapter {
 
     private final Visitor<ElementModel> adapterVisitor = new AdapterVisitor();
     private final StarshipInitializer starshipInitializer = new StarshipInitializer();
     private final Handler<Collision> collisionHandler = new CollisionHandler();
-    private final Handler<TimePassed> spawnHandler = new SpawnHandler();
+    private final Handler<TimePassed> spawnHandler = new SpawnHandler(GAME_WIDTH, 130d, 50d, GAME_WIDTH, GAME_HEIGHT);
     private final Handler<TimePassed> innerStateHandler = new InnerStateHandler();
     private final Handler<TimePassed> movementHandler = new MovementHandler();
+    private final SaveHandler saveHandler = new SaveHandler();
+    private final LoadHandler loadHadler = new LoadHandler();
 
 
     public GameState initializeGame(Integer playerNumber) {
@@ -37,6 +44,7 @@ public class UIAdapter {
     }
 
     public GameState handle(TimePassed timePassed, GameState gameState) {
+//        return gameState;
         return calculateUpdates(timePassed, gameState);
     }
 
@@ -50,6 +58,10 @@ public class UIAdapter {
 
     public GameState handle(KeyReleased keyReleased, GameState gameState) {
         return gameState.keyReleased(keyReleased.getKey());
+    }
+
+    public GameState loadGame() {
+        return loadHadler.handle();
     }
 
     public GameState pause(GameState gameState) {
@@ -66,6 +78,10 @@ public class UIAdapter {
 
     public Integer getPlayeScore(Integer playerNumber, GameState gameState) {
         return gameState.getPlayerScore(playerNumber);
+    }
+
+    public GameState save(GameState gameState) {
+        return saveHandler.handle(gameState);
     }
 
 

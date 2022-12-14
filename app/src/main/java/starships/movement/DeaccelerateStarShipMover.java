@@ -22,6 +22,7 @@ public class DeaccelerateStarShipMover implements Mover {
                 movementData.getRotation()
         );
     }
+
     private static Double deaccelerateSpeed(Double speed, Double deltaSpeed) {
         if (speed == 0) return 0d;
         if (speed < 0) return speed + deltaSpeed;

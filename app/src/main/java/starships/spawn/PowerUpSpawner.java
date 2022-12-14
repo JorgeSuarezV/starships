@@ -13,19 +13,18 @@ import starships.movement.Vector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import static starships.Util.GeneralUtils.getRandomValue;
-import static starships.config.Constants.GAME_WIDTH;
 
 public class PowerUpSpawner implements Spawner {
-
-
+    
     private final Double spawnRate;
+    private final Double maxWidth;
     private final List<PowerUpApplier> powerUpAppliers = generateAppliers();
 
-    public PowerUpSpawner(Double spawnRate) {
+    public PowerUpSpawner(Double spawnRate, Double maxWidth) {
         this.spawnRate = spawnRate;
+        this.maxWidth = maxWidth;
     }
 
     private List<PowerUpApplier> generateAppliers() {
@@ -54,10 +53,9 @@ public class PowerUpSpawner implements Spawner {
         return powerUpAppliers.get((int) (Math.random() * powerUpAppliers.size()));
     }
 
-
     private MovementData calculateRandomMovementData() {
         return new MovementData(
-                new Vector(getRandomValue(0d, GAME_WIDTH), 0d),
+                new Vector(getRandomValue(0d, maxWidth), 0d),
                 new Vector(0d, 40d),
                 new Rotation(0d, 0d)
         );

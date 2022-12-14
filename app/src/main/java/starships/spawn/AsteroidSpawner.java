@@ -8,7 +8,6 @@ import starships.movement.Rotation;
 import starships.movement.Vector;
 
 import java.util.Set;
-import java.util.UUID;
 
 import static starships.Util.GeneralUtils.getRandomValue;
 import static starships.config.Constants.*;
@@ -17,9 +16,17 @@ import static starships.config.Constants.*;
 public class AsteroidSpawner implements Spawner {
 
     private final Double spawnRate;
+    private final Double maxHealth;
+    private final Double minHealth;
+    private final Double maxWidth;
+    private final Double maxHeight;
 
-    public AsteroidSpawner(Double spawnRate) {
+    public AsteroidSpawner(Double spawnRate, Double maxHealth, Double minHealth, Double maxWidth, Double maxHeight) {
         this.spawnRate = spawnRate;
+        this.maxHealth = maxHealth;
+        this.minHealth = minHealth;
+        this.maxWidth = maxWidth;
+        this.maxHeight = maxHeight;
     }
 
     private static Vector calculateNewSpeed(Vector initialPosition, Vector targetPosition) {
@@ -33,7 +40,7 @@ public class AsteroidSpawner implements Spawner {
     }
 
     private Asteroid spawnAsteroid() {
-        double randomValue = getRandomValue(MIN_ASTEROID_SIZE, MAX_ASTEROID_SIZE);
+        double randomValue = getRandomValue(minHealth, maxHealth);
         return new Asteroid(
                 calculateRandomMovementData(),
                 randomValue,
@@ -52,15 +59,15 @@ public class AsteroidSpawner implements Spawner {
 
     private Vector calculateRandomBorderPosition() {
         if (Math.random() < 0.5) {
-            return new Vector(getRandomValue(0d, GAME_WIDTH), 0d);
+            return new Vector(getRandomValue(0d, maxWidth), 0d);
         } else {
-            return new Vector(0d, getRandomValue(0d, GAME_HEIGHT));
+            return new Vector(0d, getRandomValue(0d, maxHeight));
         }
     }
 
     private Vector calculateRandomCenterPosition() {
-        Double xPosition = getRandomValue(GAME_WIDTH / 4, (GAME_WIDTH / 4) * 3);
-        Double yPosition = getRandomValue(GAME_HEIGHT / 4, (GAME_HEIGHT / 4) * 3);
+        Double xPosition = getRandomValue(maxWidth / 4, (maxWidth / 4) * 3);
+        Double yPosition = getRandomValue(maxHeight / 4, (maxHeight / 4) * 3);
         return new Vector(xPosition, yPosition);
     }
 

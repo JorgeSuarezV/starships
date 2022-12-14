@@ -90,7 +90,7 @@ public class InnerStateVisitor implements Visitor<Set<Collideable>> {
         return Set.of(new PowerUp(
                 powerUp.getId(),
                 powerUp.getMovementData(),
-                powerUp.getPowerUpAplier(),
+                powerUp.getPowerUpApplier(),
                 powerUp.getCollisionResultVisitor()
         ));
     }

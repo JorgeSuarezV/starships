@@ -7,12 +7,15 @@ public class Constants {
 
     //GAME CONSTANTS
     public static final double GAME_WIDTH = 1000;
-    public static final double GAME_HEIGHT = 1000;
+    public static final double GAME_HEIGHT = 700;
+    public static final String SAVE_DIR = System.getenv("PROGRAMFILES") + "/starship/saves";
+    public static final String SAVE_FILE_DIR = SAVE_DIR + "/save1.json";
+    ;
 
     //SHIP CONSTANTS
-    public static final int LIVES = 2;
+    public static final int LIVES = 5;
     public static final double STARSHIP_SPEED_INCREMENT = 300d;
-    public static final double STARSHIP_ROTATION_DEGREES = 2d;
+    public static final double STARSHIP_ROTATION_DEGREES = 180d;
     public static final double STARTING_ANGLE = 90;
 
     //BULLET CONSTANTS
@@ -32,7 +35,9 @@ public class Constants {
     public static final double ASTEROID_SPEED_COEFFICIENT = 0.3;
 
     //KEY CONSTANTS
-    public static final String PAUSE_GAME = "P";
+    public static final String PAUSE_GAME_KEY = "P";
+    public static final String SAVE_GAME_KEY = "ENTER";
+    public static final String LOAD_GAME_KEY = "BACK_SPACE";
 
 
     //IMAGE REFERENCES

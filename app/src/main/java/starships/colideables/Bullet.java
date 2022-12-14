@@ -1,5 +1,6 @@
 package starships.colideables;
 
+import org.jetbrains.annotations.Nullable;
 import starships.collision.BulletBehavior;
 import starships.collision.Collideable;
 import starships.collision.CollisionResult;
@@ -8,6 +9,7 @@ import starships.movement.MovementData;
 
 import java.util.UUID;
 
+import static starships.movement.MovementService.isOutOfBounds;
 import static starships.movement.MovementService.noAccelerationNewMovement;
 
 public class Bullet implements Collideable {
@@ -25,6 +27,7 @@ public class Bullet implements Collideable {
         this.bulletBehavior = bulletBehavior;
         this.collisionResultVisitor = collisionResultVisitor;
     }
+
     public Bullet(MovementData movementData, BulletData bulletData, BulletBehavior bulletBehavior, Visitor<CollisionResult> collisionResultVisitor) {
         this.id = "bullet-" + UUID.randomUUID();
         this.movementData = movementData;
@@ -56,10 +59,13 @@ public class Bullet implements Collideable {
     }
 
     @Override
-    public Collideable move(Double secondsSinceLastTime, KeyService keyService) {
+    public @Nullable
+    Collideable move(Double secondsSinceLastTime, KeyService keyService) {
+        MovementData movementData = noAccelerationNewMovement(this.movementData, secondsSinceLastTime);
+        if (isOutOfBounds(movementData)) return null;
         return new Bullet(
                 id,
-                noAccelerationNewMovement(movementData, secondsSinceLastTime),
+                movementData,
                 bulletData,
                 bulletBehavior,
                 collisionResultVisitor

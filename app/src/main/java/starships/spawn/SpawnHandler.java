@@ -12,8 +12,13 @@ import static starships.Util.Sets.mergeSet;
 
 public class SpawnHandler implements Handler<TimePassed> {
 
-    private final Spawner asteroidSpawner = new AsteroidSpawner(3d);
-    private final Spawner powerUpSpawner = new PowerUpSpawner(20d);
+    private final Spawner asteroidSpawner;
+    private final Spawner powerUpSpawner;
+
+    public SpawnHandler(Double maxPowerUpWidth, Double maxHealth, Double minHealth, Double maxWidth, Double maxHeight) {
+        this.asteroidSpawner = new AsteroidSpawner(3d, maxHealth, minHealth, maxWidth, maxHeight);
+        this.powerUpSpawner = new PowerUpSpawner(20d, maxPowerUpWidth);
+    }
 
     @Override
     public GameState handle(TimePassed event, GameState gameState) {

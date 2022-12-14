@@ -12,7 +12,7 @@ public class AccelerateStarShipMover implements Mover {
 
     private MovementData accelerate(MovementData movementData, Double secondsSinceLastTime) {
         final Double xSpeed = Math.cos(Math.toRadians(movementData.getAngleInDegrees() + 90)) * STARSHIP_SPEED_INCREMENT * secondsSinceLastTime + movementData.getxSpeed();
-        final Double ySpeed = Math.sin(Math.toRadians(movementData.getAngleInDegrees() + 90)) * STARSHIP_SPEED_INCREMENT * secondsSinceLastTime+ movementData.getySpeed();
+        final Double ySpeed = Math.sin(Math.toRadians(movementData.getAngleInDegrees() + 90)) * STARSHIP_SPEED_INCREMENT * secondsSinceLastTime + movementData.getySpeed();
 
         return new MovementData(
                 movementData.getPosition().sum(movementData.getSpeed().multiply(secondsSinceLastTime)),

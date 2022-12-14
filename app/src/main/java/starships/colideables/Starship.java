@@ -1,5 +1,6 @@
 package starships.colideables;
 
+import org.jetbrains.annotations.Nullable;
 import starships.collision.Collideable;
 import starships.collision.CollisionResult;
 import starships.keys.KeyService;
@@ -30,6 +31,7 @@ public class Starship implements Collideable {
         this.collisionResultVisitor = collisionResultVisitor;
         this.mover = mover;
     }
+
     public Starship(Integer playerNumber, Set<PowerUpApplier> starshipPowerUps, MovementData movementData, Integer lives, Weapon weapon, Visitor<CollisionResult> collisionResultVisitor, Mover mover) {
         this.id = "starship-" + UUID.randomUUID();
         this.playerNumber = playerNumber;
@@ -63,7 +65,8 @@ public class Starship implements Collideable {
     }
 
     @Override
-    public Collideable move(Double secondsSinceLastTime, KeyService keyService) {
+    public @Nullable
+    Collideable move(Double secondsSinceLastTime, KeyService keyService) {
         return new Starship(
                 id,
                 playerNumber,

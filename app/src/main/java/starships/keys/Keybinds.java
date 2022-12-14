@@ -17,7 +17,7 @@ public class Keybinds {
 
     private static PlayerKeys readKeys() {
         try {
-            String config = readFile("keybinds.json");
+            String config = readFile(System.getProperty("user.dir") + "/app/src/main/resources/keybinds.json");
             return new Gson().fromJson(config, PlayerKeys.class);
         } catch (Exception e) {
             // TODO load defaults

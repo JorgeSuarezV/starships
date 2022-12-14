@@ -17,12 +17,13 @@ import starships.collision.Collideable
 import starships.config.Constants.*
 import starships.state.GameState
 import starships.state.NormalGameState
+import starships.state.PausedGameState
 
 
 private val imageResolver = CachedImageResolver(DefaultImageResolver())
 private val facade = ElementsViewFacade(imageResolver)
 private val keyTracker = KeyTracker()
-private val stateManager = StateManager(NormalGameState(1))
+private val stateManager = StateManager(PausedGameState(NormalGameState(1)))
 
 
 
@@ -91,15 +92,23 @@ class MyStarships() : Application() {
 
     private fun buildLivesLayout(life1: Label, life2: Label): VBox {
         val livesLayout = VBox()
+        val lives = Label()
+        lives.text = "LIVES"
+        lives.font = Font("Arial", 50.0)
+        lives.textFill = Color.WHITE
         livesLayout.alignment = Pos.TOP_LEFT
-        livesLayout.children.addAll(life1, life2)
+        livesLayout.children.addAll(lives,life1, life2)
         return livesLayout
     }
 
     private fun buildScoresLayout(score1: Label, score2: Label): VBox {
         val scoreLayout = VBox()
+        val scores = Label()
+        scores.text = "SCORES:"
+        scores.font = Font("Arial", 50.0)
+        scores.textFill = Color.WHITE
         scoreLayout.alignment = Pos.TOP_RIGHT
-        scoreLayout.children.addAll(score1, score2)
+        scoreLayout.children.addAll(scores, score1, score2)
         return scoreLayout
     }
 
@@ -117,18 +126,31 @@ class MyStarships() : Application() {
         primaryStage.scene = generateStartScene(adapter, primaryStage, inserter)
     }
 
+
     private fun generateStartScene(adapter: UIAdapter, window: Stage, inserter: EntityInSceneManager): Scene {
         val gameTitleLabel = Label("BloonShip")
         val onePlayerButton = generatePlayerButton(1, "One Player", adapter, window, inserter)
         val twoPlayersButton = generatePlayerButton(2, "Two Player", adapter, window, inserter)
+        val loadGameButton = generateLoadGameButton("Load Game", adapter, window, inserter)
 
         val buttonLayout = HBox()
-        buttonLayout.children.addAll(onePlayerButton, twoPlayersButton)
+        buttonLayout.children.addAll(loadGameButton, onePlayerButton, twoPlayersButton)
 
         val completeLayout = VBox()
         completeLayout.children.addAll(gameTitleLabel, buttonLayout)
 
         return Scene(completeLayout)
+    }
+
+    private fun generateLoadGameButton(text: String, adapter: UIAdapter, window: Stage, inserter: EntityInSceneManager): Button {
+        val button =  Button(text)
+        button.setOnMouseClicked{
+            val gameState = adapter.loadGame()
+            inserter.updateFacade(gameState)
+            stateManager.setState(gameState)
+            window.scene = gameScene
+        }
+        return button
     }
 
     private fun generatePlayerButton(playerQuantity: Int, text: String, adapter: UIAdapter, window: Stage, inserter: EntityInSceneManager): Button {
@@ -146,7 +168,7 @@ class MyStarships() : Application() {
         keyTracker.scene = gameScene
         facade.timeListenable.addEventListener(timeListener)
         facade.collisionsListenable.addEventListener(CollisionListener(stateManager, inserter, adapter))
-        facade.outOfBoundsListenable.addEventListener(OutOfBoundsListener(stateManager, inserter, adapter))
+//        facade.outOfBoundsListenable.addEventListener(OutOfBoundsListener(stateManager, inserter, adapter))
         keyTracker.keyPressedListenable.addEventListener(KeyPressedListener(stateManager, pauseManager, inserter, adapter))
         keyTracker.keyReleasedListenable.addEventListener(KeyReleasedListener(stateManager, inserter, adapter))
         return pauseManager
@@ -274,9 +296,8 @@ class KeyPressedListener(
 ) : EventListener<KeyPressed> {
 
     override fun handle(event: KeyPressed) {
-        if (event.key == KeyCode.valueOf(PAUSE_GAME)) {
-            pauser.activatedKey()
-        }
+        if (event.key.toString().equals(PAUSE_GAME_KEY)) pauser.activatedKey()
+        if (event.key.toString().equals(SAVE_GAME_KEY)) adapter.save(stateManager.getState())
         val gameState = adapter.handle(event, stateManager.getState())
         inserter.updateFacade(gameState)
         stateManager.setState(gameState)
