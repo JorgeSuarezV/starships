@@ -13,7 +13,7 @@ public class Constants {
 
 
     //SHIP CONSTANTS
-    public static final int LIVES = 5;
+    public static final int LIVES = 1;
     public static final double STARSHIP_SPEED_INCREMENT = 300d;
     public static final double STARSHIP_ROTATION_DEGREES = 180d;
     public static final double STARTING_ANGLE = 90;

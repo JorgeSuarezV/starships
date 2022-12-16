@@ -31,4 +31,6 @@ public interface GameState {
     Integer getPlayerQuantity();
 
     Integer getLives(Integer playerLives);
+
+    Boolean isOver();
 }

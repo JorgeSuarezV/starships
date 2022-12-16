@@ -3,7 +3,9 @@ package starships.collision;
 import edu.austral.ingsis.starships.ui.Collision;
 import org.jetbrains.annotations.NotNull;
 import starships.state.CollideableMap;
+import starships.state.GameOverGameState;
 import starships.state.GameState;
+import starships.state.PausedGameState;
 
 public class CollisionHandler implements Handler<Collision> {
 
@@ -15,7 +17,7 @@ public class CollisionHandler implements Handler<Collision> {
         if (collideableNotFound(collideable1, collideable2)) return gameState;
         GameState gameState1 = collide(gameState, collideable1, collideable2);
         GameState gameState2 = collide(gameState1, collideable2, collideable1);
-        if (gameEnded(gameState2.getCollideableMap())) gameOver(gameState2);
+        if (gameEnded(gameState2.getCollideableMap())) return gameOver(gameState2);
         return gameState2;
     }
 
@@ -35,10 +37,8 @@ public class CollisionHandler implements Handler<Collision> {
                 .addPoints(result1.getPoints(), result1.getPlayerNumber());
     }
 
-    private void gameOver(GameState gameState) {
-        System.out.println("Player 1: " + gameState.getPlayerScore(1));
-        System.out.println("Player 2: " + gameState.getPlayerScore(2));
-        System.exit(0);
+    private GameState gameOver(GameState gameState) {
+        return new GameOverGameState(new PausedGameState(gameState));
     }
 
     private boolean gameEnded(CollideableMap collideableMap) {

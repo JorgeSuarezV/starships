@@ -103,6 +103,11 @@ public class NormalGameState implements GameState {
         return 0;
     }
 
+    @Override
+    public Boolean isOver() {
+        return false;
+    }
+
     private boolean isPlayer(Integer playerNumber, String id) {
         return ((Starship) collideableMap.getAcualCollideablesMap().get(id)).getPlayerNumber().equals(playerNumber);
     }

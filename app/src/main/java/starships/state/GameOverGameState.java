@@ -6,26 +6,23 @@ import starships.keys.KeyService;
 
 import java.util.Set;
 
-public class PausedGameState implements GameState {
+public class GameOverGameState implements GameState{
 
-    private final GameState gameState;
+    private final PausedGameState pausedGameState;
 
-    public PausedGameState(GameState gameState) {
-        this.gameState = gameState;
+    public GameOverGameState(PausedGameState pausedGameState) {
+        this.pausedGameState = pausedGameState;
     }
 
-    public PausedGameState() {
-        this.gameState = new NormalGameState(getPlayerQuantity());
-    }
 
     @Override
     public CollideableMap getCollideableMap() {
-        return gameState.getCollideableMap();
+        return pausedGameState.getCollideableMap();
     }
 
     @Override
     public KeyService getKeyService() {
-        return gameState.getKeyService();
+        return pausedGameState.getKeyService();
     }
 
     @Override
@@ -55,7 +52,7 @@ public class PausedGameState implements GameState {
 
     @Override
     public ScoreService getScores() {
-        return gameState.getScores();
+        return pausedGameState.getScores();
     }
 
     @Override
@@ -65,21 +62,21 @@ public class PausedGameState implements GameState {
 
     @Override
     public Integer getPlayerScore(Integer playerNumber) {
-        return gameState.getPlayerScore(playerNumber);
+        return pausedGameState.getPlayerScore(playerNumber);
     }
 
     @Override
     public Integer getPlayerQuantity() {
-        return gameState.getPlayerQuantity();
+        return pausedGameState.getPlayerQuantity();
     }
 
     @Override
     public Integer getLives(Integer playerLives) {
-        return gameState.getLives(playerLives);
+        return pausedGameState.getLives(playerLives);
     }
 
     @Override
     public Boolean isOver() {
-        return gameState.isOver();
+        return true;
     }
 }

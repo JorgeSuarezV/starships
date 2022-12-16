@@ -10,7 +10,6 @@ import starships.state.NormalGameState;
 import starships.state.ScoreService;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,6 +38,7 @@ public class NormalGameStateDesearilizer implements JsonDeserializer<NormalGameS
         ConcurrentHashMap<String, Collideable> collideableMap = new ConcurrentHashMap<>();
         for (Map.Entry<String, JsonElement> activeCollideable : activeCollideables) {
             Collideable collideable = parseCollideable(activeCollideable, context);
+            if (collideable == null) continue;
             collideableMap.put(collideable.getId(), collideable);
         }
         return collideableMap;
