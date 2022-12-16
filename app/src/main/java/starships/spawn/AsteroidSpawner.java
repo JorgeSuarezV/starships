@@ -10,7 +10,7 @@ import starships.movement.Vector;
 import java.util.Set;
 
 import static starships.Util.GeneralUtils.getRandomValue;
-import static starships.config.Constants.*;
+import static starships.config.Constants.ASTEROID_SPEED_COEFFICIENT;
 
 
 public class AsteroidSpawner implements Spawner {

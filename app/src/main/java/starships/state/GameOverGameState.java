@@ -6,7 +6,7 @@ import starships.keys.KeyService;
 
 import java.util.Set;
 
-public class GameOverGameState implements GameState{
+public class GameOverGameState implements GameState {
 
     private final PausedGameState pausedGameState;
 

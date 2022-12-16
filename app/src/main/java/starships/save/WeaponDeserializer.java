@@ -13,8 +13,10 @@ public class WeaponDeserializer implements JsonDeserializer<Weapon> {
         JsonObject jsonObject = json.getAsJsonObject();
         String type = jsonObject.get("type").getAsString();
         return switch (type) {
-            case "classic" -> new ClassicWeapon(jsonObject.get("weapon").getAsJsonObject().get("secondsSinceLastShot").getAsDouble());
-            case "double" -> new DoubleCanonWeapon(jsonObject.get("weapon").getAsJsonObject().get("secondsSinceLastShot").getAsDouble());
+            case "classic" ->
+                    new ClassicWeapon(jsonObject.get("weapon").getAsJsonObject().get("secondsSinceLastShot").getAsDouble());
+            case "double" ->
+                    new DoubleCanonWeapon(jsonObject.get("weapon").getAsJsonObject().get("secondsSinceLastShot").getAsDouble());
             default -> new ClassicWeapon(0d);
         };
     }

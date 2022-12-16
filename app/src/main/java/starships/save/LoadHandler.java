@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 import starships.colideables.*;
-import starships.collision.Handler;
 import starships.state.GameState;
 import starships.state.NormalGameState;
 

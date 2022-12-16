@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 import starships.colideables.PowerUpApplier;
 import starships.colideables.Weapon;
-import starships.collision.Handler;
 import starships.state.GameState;
 import starships.state.PausedGameState;
 

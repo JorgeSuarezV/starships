@@ -2,8 +2,6 @@ package starships.save;
 
 import com.google.gson.*;
 import org.jetbrains.annotations.NotNull;
-import starships.colideables.ClassicWeapon;
-import starships.colideables.DoubleCanonWeapon;
 import starships.colideables.PowerUpApplier;
 import starships.colideables.power_up_apliers.DoubleCanonPowerUp;
 import starships.colideables.power_up_apliers.InvulnerabilityPowerUp;

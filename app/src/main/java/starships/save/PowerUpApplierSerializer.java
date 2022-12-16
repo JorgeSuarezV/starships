@@ -4,10 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import starships.colideables.ClassicWeapon;
-import starships.colideables.DoubleCanonWeapon;
 import starships.colideables.PowerUpApplier;
-import starships.colideables.Weapon;
 import starships.colideables.power_up_apliers.DoubleCanonPowerUp;
 import starships.colideables.power_up_apliers.InvulnerabilityPowerUp;
 

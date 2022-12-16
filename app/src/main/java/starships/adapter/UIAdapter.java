@@ -44,7 +44,6 @@ public class UIAdapter {
     }
 
     public GameState handle(TimePassed timePassed, GameState gameState) {
-//        return gameState;
         return calculateUpdates(timePassed, gameState);
     }
 

@@ -17,7 +17,7 @@ import java.util.Set;
 import static starships.Util.GeneralUtils.getRandomValue;
 
 public class PowerUpSpawner implements Spawner {
-    
+
     private final Double spawnRate;
     private final Double maxWidth;
     private final List<PowerUpApplier> powerUpAppliers = generateAppliers();

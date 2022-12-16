@@ -7,6 +7,12 @@ import static starships.config.Constants.STARSHIP_SPEED_INCREMENT;
 public class DeaccelerateStarShipMover implements Mover {
 
 
+    private static Double deaccelerateSpeed(Double speed, Double deltaSpeed) {
+        if (speed == 0) return 0d;
+        if (speed < 0) return speed + deltaSpeed;
+        else return speed - deltaSpeed;
+    }
+
     @Override
     public MovementData move(Double secondsSinceLastTime, KeyService keyService, Integer playerNumber, MovementData movementData) {
         return deaccelerate(movementData, secondsSinceLastTime);
@@ -21,11 +27,5 @@ public class DeaccelerateStarShipMover implements Mover {
                 new Vector(deaccelerateSpeed(movementData.getxSpeed(), deltaxSpeed), deaccelerateSpeed(movementData.getySpeed(), deltaySpeed)),
                 movementData.getRotation()
         );
-    }
-
-    private static Double deaccelerateSpeed(Double speed, Double deltaSpeed) {
-        if (speed == 0) return 0d;
-        if (speed < 0) return speed + deltaSpeed;
-        else return speed - deltaSpeed;
     }
 }

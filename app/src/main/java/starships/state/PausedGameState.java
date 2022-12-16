@@ -14,10 +14,6 @@ public class PausedGameState implements GameState {
         this.gameState = gameState;
     }
 
-    public PausedGameState() {
-        this.gameState = new NormalGameState(getPlayerQuantity());
-    }
-
     @Override
     public CollideableMap getCollideableMap() {
         return gameState.getCollideableMap();
